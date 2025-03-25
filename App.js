@@ -5,7 +5,16 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SettingsScreen from "./src/screens/SettingsScreen.js";
 import DetailsScreen from "./src/screens/DetailsScreen.js";
 
-function HomeScreen({ navigation }) {  // 🔹 Recibir navigation como prop
+// Sample LoginScreen Component (You can replace this with your actual login screen)
+function LoginScreen() {
+  return (
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Text>Login Screen</Text>
+    </View>
+  );
+}
+
+function HomeScreen({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Text>HomeScreen</Text>
@@ -29,24 +38,30 @@ function HomeScreen({ navigation }) {  // 🔹 Recibir navigation como prop
 const Stack = createNativeStackNavigator();
 
 function RootStack() {
+  let isSignedIn = false; 
+
   return (
-    <Stack.Navigator
-      initialRouteName="Home"
-      screenOptions={{
-        headerStyle: { backgroundColor: "tomato" },
-      }}
-    >
-      <Stack.Screen name="Home" component={HomeScreen} options={{ title: "Dashboard" }} />
-      <Stack.Screen name="Details" component={DetailsScreen} options={{ title: "Details" }} />
-      <Stack.Screen name="Settings" component={SettingsScreen} options={{ title: "Settings" }} />  
-    </Stack.Navigator>
+    <NavigationContainer>
+      {isSignedIn ? (
+        <Stack.Navigator
+          initialRouteName="Home"
+          screenOptions={{
+            headerStyle: { backgroundColor: "tomato" },
+          }}
+        >
+          <Stack.Screen name="Home" component={HomeScreen} options={{ title: "Dashboard" }} />
+          <Stack.Screen name="Details" component={DetailsScreen} options={{ title: "Details" }} />
+          <Stack.Screen name="Settings" component={SettingsScreen} options={{ title: "Settings" }} />
+        </Stack.Navigator>
+      ) : (
+        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Login">
+          <Stack.Screen name="Login" component={LoginScreen} />
+        </Stack.Navigator>
+      )}
+    </NavigationContainer>
   );
 }
 
 export default function App() {
-  return (
-    <NavigationContainer>
-      <RootStack />
-    </NavigationContainer>
-  );
+  return <RootStack />;
 }

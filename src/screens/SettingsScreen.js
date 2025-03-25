@@ -18,7 +18,7 @@ function SettingsScreen() {
                 title="Go back"
                 onPress={() => navigation.goBack()} 
             />
-        </View>
+        </View> 
     );
 }
 
