@@ -52,7 +52,7 @@ function MainTabs() {
           } else if (route.name === "Settings") {
             iconName = focused ? "settings" : "settings-outline";
           }
-          return ;
+          return <Ionicons name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: "tomato",
         tabBarInactiveTintColor: "gray",
