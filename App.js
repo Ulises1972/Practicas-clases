@@ -5,20 +5,23 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SettingsScreen from "./src/screens/SettingsScreen.js";
 import DetailsScreen from "./src/screens/DetailsScreen.js";
 
-// Sample LoginScreen Component (You can replace this with your actual login screen)
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
+// Sample LoginScreen Component
 function LoginScreen() {
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    <View style={styles.container}>
       <Text>Login Screen</Text>
     </View>
   );
 }
 
+// Home Screen
 function HomeScreen({ navigation }) {
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+    <View style={styles.container}>
       <Text>HomeScreen</Text>
-
       <Button
         title="Go to Details"
         onPress={() => navigation.navigate("Details", {
@@ -26,7 +29,6 @@ function HomeScreen({ navigation }) {
           otherParam: "anything you want here",
         })}
       />
-
       <Button
         title="Go to Settings"
         onPress={() => navigation.navigate("Settings")}
@@ -36,23 +38,40 @@ function HomeScreen({ navigation }) {
 }
 
 const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
+// Navegación con Tabs
+function MainTabs() {
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+          if (route.name === "Home") {
+            iconName = focused ? "home" : "home-outline";
+          } else if (route.name === "Settings") {
+            iconName = focused ? "settings" : "settings-outline";
+          }
+          return ;
+        },
+        tabBarActiveTintColor: "tomato",
+        tabBarInactiveTintColor: "gray",
+      })}
+    >
+      <Tab.Screen name="Home" component={HomeScreen} options={{ title: "Dashboard" }} />
+      <Tab.Screen name="Settings" component={SettingsScreen} options={{ title: "Settings" }} />
+    </Tab.Navigator>
+  );
+}
+
+// Stack principal que maneja la autenticación
 function RootStack() {
-  let isSignedIn = false; 
+  let isSignedIn = true;
 
   return (
     <NavigationContainer>
       {isSignedIn ? (
-        <Stack.Navigator
-          initialRouteName="Home"
-          screenOptions={{
-            headerStyle: { backgroundColor: "tomato" },
-          }}
-        >
-          <Stack.Screen name="Home" component={HomeScreen} options={{ title: "Dashboard" }} />
-          <Stack.Screen name="Details" component={DetailsScreen} options={{ title: "Details" }} />
-          <Stack.Screen name="Settings" component={SettingsScreen} options={{ title: "Settings" }} />
-        </Stack.Navigator>
+        <MainTabs />
       ) : (
         <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Login">
           <Stack.Screen name="Login" component={LoginScreen} />
@@ -65,3 +84,11 @@ function RootStack() {
 export default function App() {
   return <RootStack />;
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
